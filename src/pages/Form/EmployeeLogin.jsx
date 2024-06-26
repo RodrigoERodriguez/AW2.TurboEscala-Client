@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import TurboEscala from '../../components/ui/turboEscala';
 import Footer from '../../components/shared/footer/footer';
-import { auth } from '../../FireBase/config';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import authService from '../../services/authService';
 
 const EmployeeLogin = ({ setShowNavBarAndFooter }) => {
     const [error, setError] = useState('');
@@ -12,13 +11,13 @@ const EmployeeLogin = ({ setShowNavBarAndFooter }) => {
 
     useEffect(() => {
         setShowNavBarAndFooter(false);
-
         return () => setShowNavBarAndFooter(true);
     }, [setShowNavBarAndFooter]);
 
     const handleSignIn = async () => {
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const response = await authService.employeeLogin(email, password);
+            console.log(response);
             window.location.href = 'http://localhost:5173/employeeView';
         } catch (error) {
             console.error(error);

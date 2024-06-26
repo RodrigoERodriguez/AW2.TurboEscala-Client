@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import TurboEscala from '../../components/ui/turboEscala';
 import Footer from '../../components/shared/footer/footer';
-import { auth, baseDeDatos } from '../../FireBase/config';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore';
+import authService from '../../services/authService';
 
 const SignInOrRegister = ({ setShowNavBarAndFooter }) => {
     const [showSignIn, setShowSignIn] = useState(true);
@@ -22,7 +20,9 @@ const SignInOrRegister = ({ setShowNavBarAndFooter }) => {
 
     const handleSignIn = async () => {
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const response = await authService.login(email, password);
+            console.log(response);
+            setSuccessMessage('Inicio de sesión exitoso');
             window.location.href = 'http://localhost:5173/';
         } catch (error) {
             console.error(error);
@@ -33,21 +33,11 @@ const SignInOrRegister = ({ setShowNavBarAndFooter }) => {
 
     const handleRegister = async () => {
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const userId = userCredential.user.uid;
-            const usuariosRef = collection(baseDeDatos, 'usuarios');
-            await addDoc(usuariosRef, {
-                userId: userId,
-                firstName: firstName,
-                lastName: lastName,
-                email: email
-            });
-
-            console.log('Usuario registrado correctamente');
-            clearFormFields();
+            const response = await authService.register(firstName, lastName, email, password);
+            console.log(response);
             setSuccessMessage('Registro exitoso');
-            window.location.href = '/loginclientes';
 
+            window.location.href = '/loginclientes';
         } catch (error) {
             console.error(error);
             setError('Error al registrar usuario. Por favor, intenta nuevamente.');

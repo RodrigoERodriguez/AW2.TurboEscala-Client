@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { pedidos } from '../../FireBase/config';
+import pedidoService from '../../services/pedidoService'; // Importamos el servicio de pedidos
 
 const Pedidos = () => {
     const [codigoPedido, setCodigoPedido] = useState('');
@@ -17,21 +16,13 @@ const Pedidos = () => {
 
         setError('');
         
-        const pedidoRef = doc(pedidos, 'PedidosDeCompra', codigoPedido);
-
         try {
-            const pedidoSnapshot = await getDoc(pedidoRef);
-            if (pedidoSnapshot.exists()) {
-                const pedidoData = pedidoSnapshot.data();
-                if (pedidoData.email === email && pedidoData.dni === dni) {
-                    setItem({ ...pedidoData, id: pedidoSnapshot.id });
-                } else {
-                    setItem(null);
-                    setError('El código de pedido, email o DNI ingresados no coinciden con ningún pedido.');
-                }
+            const pedidoEncontrado = await pedidoService.buscarPedido(codigoPedido, email, dni);
+            if (pedidoEncontrado) {
+                setItem(pedidoEncontrado);
             } else {
                 setItem(null);
-                setError('El pedido ingresado no existe.');
+                setError('El código de pedido, email o DNI ingresados no coinciden con ningún pedido.');
             }
         } catch (error) {
             console.error('Error al buscar el pedido:', error);

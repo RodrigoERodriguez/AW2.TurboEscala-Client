@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { baseDeDatos } from '../../FireBase/config';
+import { updateProducto } from '../../services/Productos';
 import Item from '../../components/shared/Item/Item';
 
 const EmployeeView = () => {
@@ -11,12 +10,7 @@ const EmployeeView = () => {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const productosCollection = collection(baseDeDatos, "Productos");
-                const filtroCategoria = categoria 
-                    ? query(productosCollection, where("categoria", "==", categoria)) 
-                    : productosCollection;
-                const productosSnapshot = await getDocs(filtroCategoria);
-                const productosList = productosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const productosList = await fetchProductos(categoria);
                 setItems(productosList);
                 setLoading(false);
             } catch (error) {
@@ -27,10 +21,15 @@ const EmployeeView = () => {
         fetchProductos();
     }, [categoria]);
 
-    const handleInputChange = (id, field, value) => {
-        setItems(items.map(item => 
-            item.id === id ? { ...item, [field]: value } : item
-        ));
+    const handleInputChange = async (id, field, value) => {
+        try {
+            await updateProducto(id, { [field]: value });
+            setItems(items.map(item => 
+                item.id === id ? { ...item, [field]: value } : item
+            ));
+        } catch (error) {
+            console.error("Error updating producto: ", error);
+        }
     };
 
     if (loading) {

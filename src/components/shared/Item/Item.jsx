@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { updateDoc, doc } from 'firebase/firestore';
-import { baseDeDatos } from '../../../FireBase/config';
+import { updateProducto } from '../../../services/Productos';
 import { Link } from 'react-router-dom';
+
 
 const Item = ({ producto, editable, onInputChange }) => {
     const [editing, setEditing] = useState(false);
@@ -27,12 +27,14 @@ const Item = ({ producto, editable, onInputChange }) => {
 
     const handleSaveChanges = async () => {
         try {
-            const productoRef = doc(baseDeDatos, 'Productos', producto.id);
-            await updateDoc(productoRef, {
+            const productoData = {
+                id: producto.id,
                 nameProduct: editedName,
                 price: Number(editedPrice),
                 stock: Number(editedStock)
-            });
+            };
+
+            await updateProducto(productoData.id, productoData);
             setEditing(false);
 
             if (typeof onInputChange === 'function') {
@@ -41,7 +43,7 @@ const Item = ({ producto, editable, onInputChange }) => {
                 onInputChange(producto.id, 'stock', Number(editedStock));
             }
         } catch (error) {
-            console.error('Error updating document: ', error);
+            console.error('Error updating product:', error);
         }
     };
 
