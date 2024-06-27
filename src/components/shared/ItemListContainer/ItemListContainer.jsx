@@ -5,7 +5,7 @@ import { getProductosByCategoria, getProductos } from "../../../services/Product
 
 const ItemListContainer = () => {
     const [productos, setProductos] = useState([]);
-    const [titulo] = useState("Productos");
+    const [titulo, setTitulo] = useState("Productos");
     const { categoria } = useParams();
 
     useEffect(() => {
@@ -14,13 +14,13 @@ const ItemListContainer = () => {
                 let productosData;
                 if (categoria) {
                     productosData = await getProductosByCategoria(categoria);
+                    setTitulo(`Productos - ${categoria}`);
                 } else {
                     productosData = await getProductos();
                 }
                 setProductos(productosData);
             } catch (error) {
                 console.error('Error fetching products:', error);
-                // Manejo de errores según tu aplicación
             }
         };
 

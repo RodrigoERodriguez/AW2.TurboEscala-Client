@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import pedidoService from '../../services/pedidoService'; // Importamos el servicio de pedidos
+import pedidoService from '../../services/pedidoService';
 
 const Pedidos = () => {
     const [codigoPedido, setCodigoPedido] = useState('');

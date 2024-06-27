@@ -1,20 +1,24 @@
+import PropTypes from 'prop-types';
 import Item from "../Item/Item";
-import PropTypes from 'prop-types'; 
 
-const ItemList = ( { productos } ) => {
-
+const ItemList = ({ productos, titulo }) => {
     return (
         <div>
+            <h2>{titulo}</h2>
             <div className="ml-10 grid grid-cols-3 gap-4">
-                { productos.map((prod) => <Item producto={prod} key={prod.id} />) }
+                {productos.map((prod) => <Item producto={prod} key={prod.id} />)}
             </div>
         </div>
-    )
+    );
 }
 
 ItemList.propTypes = {
     productos: PropTypes.array.isRequired,
-    titulo: PropTypes.string.isRequired
+    titulo: PropTypes.string
 };
 
-export default ItemList
+ItemList.defaultProps = {
+    titulo: 'Productos'
+};
+
+export default ItemList;
