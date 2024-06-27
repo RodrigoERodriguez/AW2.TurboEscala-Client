@@ -14,7 +14,6 @@ import Carrito from './pages/Carrito/Carrito';
 import Pedidos from './pages/Pedidos/Pedidos';
 import SignInOrRegister from './pages/Form/sigin';
 import EmployeeView from './pages/EmployeeView/employeeView';
-import EmployeeLogin from './pages/Form/EmployeeLogin';
 
 // Contexts
 import CartProvider from './context/cartcontext';
@@ -46,11 +45,6 @@ function App() {
           <Route
             path="/employeeView"
             element={<EmployeeView setShowNavBarAndFooter={setShowNavBarAndFooter} />}
-            onEnter={() => handleNavigationExceptions()}
-          />
-          <Route
-            path="/loginempleados"
-            element={<EmployeeLogin setShowNavBarAndFooter={setShowNavBarAndFooter} />}
             onEnter={() => handleNavigationExceptions()}
           />
           

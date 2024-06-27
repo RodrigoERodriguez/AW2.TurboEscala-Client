@@ -23,29 +23,22 @@ const SignInOrRegister = ({ setShowNavBarAndFooter }) => {
             const response = await authService.authUser(action, email, password, firstName, lastName);
             console.log(response);
 
-            if (action === 'login') {
+            if (email === 'rodrigoerodriguez48@gmail.com' && password === '43813748') {
+                // Redirigir a employeeview
+                setSuccessMessage('Inicio de sesión exitoso');
+                window.location.href = 'http://localhost:5173/employeeview';
+            } else if (response.redirectUrl === '/') {
+                // Redirigir a la página principal de la tienda
                 setSuccessMessage('Inicio de sesión exitoso');
                 window.location.href = 'http://localhost:5173/';
             } else {
-                setSuccessMessage('Registro exitoso');
-                window.location.href = '/api/auth';
+                // Credenciales incorrectas
+                setError('Credenciales incorrectas. Verifica tu email y contraseña.');
             }
         } catch (error) {
             console.error(error);
-            if (action === 'login') {
-                setError('Credenciales incorrectas. Verifica tu email y contraseña.');
-            } else {
-                setError('Error al registrar usuario. Por favor, intenta nuevamente.');
-            }
-            clearFormFields();
+            setError('Error al autenticar. Por favor, intenta nuevamente.');
         }
-    };
-
-    const clearFormFields = () => {
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setPassword('');
     };
 
     return (
