@@ -39,7 +39,7 @@ function App() {
         
         <Routes>
           <Route
-            path="/loginclientes"
+            path="/api/auth"
             element={<SignInOrRegister setShowNavBarAndFooter={setShowNavBarAndFooter} />}
             onEnter={() => handleNavigationExceptions()}
           />

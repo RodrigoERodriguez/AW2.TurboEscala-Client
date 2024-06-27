@@ -18,29 +18,25 @@ const SignInOrRegister = ({ setShowNavBarAndFooter }) => {
         return () => setShowNavBarAndFooter(true);
     }, [setShowNavBarAndFooter]);
 
-    const handleSignIn = async () => {
+    const handleAuth = async (action) => {
         try {
-            const response = await authService.login(email, password);
+            const response = await authService.authUser(action, email, password, firstName, lastName);
             console.log(response);
-            setSuccessMessage('Inicio de sesión exitoso');
-            window.location.href = 'http://localhost:5173/';
+
+            if (action === 'login') {
+                setSuccessMessage('Inicio de sesión exitoso');
+                window.location.href = 'http://localhost:5173/';
+            } else {
+                setSuccessMessage('Registro exitoso');
+                window.location.href = '/api/auth';
+            }
         } catch (error) {
             console.error(error);
-            setError('Credenciales incorrectas. Verifica tu email y contraseña.');
-            clearFormFields();
-        }
-    };
-
-    const handleRegister = async () => {
-        try {
-            const response = await authService.register(firstName, lastName, email, password);
-            console.log(response);
-            setSuccessMessage('Registro exitoso');
-
-            window.location.href = '/loginclientes';
-        } catch (error) {
-            console.error(error);
-            setError('Error al registrar usuario. Por favor, intenta nuevamente.');
+            if (action === 'login') {
+                setError('Credenciales incorrectas. Verifica tu email y contraseña.');
+            } else {
+                setError('Error al registrar usuario. Por favor, intenta nuevamente.');
+            }
             clearFormFields();
         }
     };
@@ -110,7 +106,7 @@ const SignInOrRegister = ({ setShowNavBarAndFooter }) => {
                             </button>
                         </div>
                         <button 
-                            onClick={handleSignIn}
+                            onClick={() => handleAuth('login')}
                             className="bg-black text-white px-4 py-2 rounded hover:bg-gray-600"
                         >
                             Iniciar sesión
@@ -154,7 +150,7 @@ const SignInOrRegister = ({ setShowNavBarAndFooter }) => {
                             className="mb-4 p-4 border border-gray-300 rounded w-full"
                         />
                         <button 
-                            onClick={handleRegister}
+                            onClick={() => handleAuth('register')}
                             className="bg-black text-white px-4 py-2 rounded hover:bg-gray-600"
                         >
                             Registrarse
