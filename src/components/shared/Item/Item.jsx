@@ -108,7 +108,7 @@ const Item = ({ producto, editable, onInputChange }) => {
                         {editable ? (
                             <button className='mr-4 bg-black text-white font-bold px-4 py-2 rounded-full hover:bg-gray-600' onClick={handleEditToggle}>Editar</button>
                         ) : (
-                            <Link className='ml-2' to={`/productos/item/${producto.id}`}>Ver Más</Link>
+                            <Link className='ml-6 bg-black text-white font-bold px-2 py-1 rounded-full' to={`/productos/item/${producto.id}`}>Ver Más</Link>
                         )}
                     </div>
                 )}

@@ -59,7 +59,7 @@ function App() {
           <Route path="/productos" element={<ItemListContainer />} />
           <Route path="/productos/:categoria" element={<ItemListContainer />} />
           <Route path="/carrito" element={<Carrito />} />
-          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/pedidos/checkout" element={<CheckOut />} />
           <Route path="/mispedidos" element={<Pedidos />} />
         </Routes>
 

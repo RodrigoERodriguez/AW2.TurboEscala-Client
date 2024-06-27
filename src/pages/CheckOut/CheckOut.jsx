@@ -1,101 +1,106 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { CartContext } from '../../context/cartcontext';
+import { useForm } from 'react-hook-form';
 import pedidoService from '../../services/pedidoService';
 
-const Pedidos = () => {
-    const [codigoPedido, setCodigoPedido] = useState('');
-    const [email, setEmail] = useState('');
-    const [dni, setDni] = useState('');
-    const [item, setItem] = useState(null);
-    const [error, setError] = useState('');
+const CheckOut = () => {
+    const [pedidoId, setPedidoId] = useState('');
 
-    const handleBuscarClick = async () => {
-        if (codigoPedido.trim() === '' || email.trim() === '' || dni.trim() === '') {
-            setError('Por favor, ingresa un código de pedido, email y DNI para buscar');
-            return;
-        }
+    const { register, handleSubmit} = useForm();
+    const { carrito, precioTotal, vaciarCarrito } = useContext(CartContext);
 
-        setError('');
-        
+    const onSubmit = async (data) => {
         try {
-            const pedidoEncontrado = await pedidoService.buscarPedido(codigoPedido, email, dni);
-            if (pedidoEncontrado) {
-                setItem(pedidoEncontrado);
-            } else {
-                setItem(null);
-                setError('El código de pedido, email o DNI ingresados no coinciden con ningún pedido.');
-            }
+            const pedido = {
+                nombre: data.nombre,
+                apellido: data.apellido,
+                telefono: data.telefono,
+                email: data.email,
+                dni: data.dni,
+                productos: carrito.map(prod => ({
+                    id: prod.id,
+                    nombreProducto: prod.nameProduct,
+                    precio: prod.price,
+                    cantidad: prod.cantidad
+                })),
+            };
+
+            const response = await pedidoService.crearPedido(pedido);
+            setPedidoId(response.id);
+            vaciarCarrito();
         } catch (error) {
-            console.error('Error al buscar el pedido:', error);
-            setError('Error al buscar el pedido. Por favor, intenta nuevamente.');
-            setItem(null);
+            console.error('Error al crear pedido:', error);
         }
     };
 
-    return (
-        <div className="container mx-auto px-4">
-            <h1 className="main-title text-5xl pt-10 text-center">Mis Pedidos</h1>
-            <p className="text-2xl pt-5 text-center">Ingresa el código de tu pedido, email y DNI</p>
-            <div className="flex mt-5">
-                <div className="w-1/3 pr-4">
-                    <div className="flex flex-col items-center">
-                        <p className="text-xl">Código de Pedido</p>
-                        <input
-                            className="p-1 w-full text-black font-bold border-2 border-black rounded mb-4"
-                            type="text"
-                            placeholder="Código sin #"
-                            value={codigoPedido}
-                            onChange={(e) => setCodigoPedido(e.target.value)}
-                        />
-
-                        <p className="text-xl">Email</p>
-                        <input
-                            className="p-1 w-full text-black font-bold border-2 border-black rounded mb-4"
-                            type="text"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-
-                        <p className="text-xl">DNI</p>
-                        <input
-                            className="p-1 w-full text-black font-bold border-2 border-black rounded mb-4"
-                            type="text"
-                            placeholder="DNI"
-                            value={dni}
-                            onChange={(e) => setDni(e.target.value)}
-                        />
-
-                        <button className="enviar bg-red-600 rounded text-white font-medium w-full p-2 mt-5" type="submit" onClick={handleBuscarClick}>
-                            Buscar
-                        </button>
-                    </div>
-
-                    {error && <p className="error-message mt-4 text-red-500">{error}</p>}
-                </div>
-
-                <div className="w-2/3 pl-4">
-                    {item && (
-                        <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-                            <h2 className="text-2xl mb-4">Detalles del Pedido:</h2>
-                            <p className="mb-2"><strong>Estado:</strong> {item.estado}</p>
-                            <p className="mb-2"><strong>Fecha:</strong> {item.fecha.toDate().toLocaleDateString()}</p>
-                            <p className="mb-2"><strong>Cantidad de productos:</strong> {Object.keys(item.productos).length}</p>
-                            <p className="mb-4"><strong>Monto total:</strong> {item.total}</p>
-                        
-                            <h3 className="text-xl mb-2">Productos:</h3>
-                            <ul className="list-disc pl-5">
-                                {Object.entries(item.productos).map(([key, producto]) => (
-                                    <li key={key}>
-                                        {producto.nameProduct} - Cantidad: {producto.cantidad} - Precio: {producto.price}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                </div>
+    if (pedidoId) {
+        return (
+            <div className="container">
+                <h1 className="main-title">Gracias por tu compra</h1>
+                <h2>Tu número de pedido es: {pedidoId}</h2>
             </div>
-        </div>
+        );
+    }
+
+    return (
+        <>
+            <h1 className="main-title text-3xl text-center mb-20">Finalizar compra</h1>
+            <div className="container w-3/4 mx-auto">
+                <form className="formulario" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="datos-container flex flex-row justify-between">
+                        <div className="tus-datos flex flex-col w-1/2 pr-5">
+                            <h2 className='text-xl font-bold'>Tus Datos</h2>
+                            <div>
+                                <p className='text-medium font-bold mt-4'>Nombre</p>
+                                <input type="text" placeholder="Nombre" {...register('nombre', { required: true })} className="p-1 border border-gray-300 rounded w-[400px]" />
+                                <p className='text-medium font-bold '>Apellido</p>
+                                <input type="text" placeholder="Apellido" {...register('apellido', { required: true })} className="p-1 border border-gray-300 rounded w-[400px]" />
+                                <p className='text-medium font-bold '>Teléfono</p>
+                                <input type="tel" placeholder="Teléfono" {...register('telefono', { required: true })} className="p-1 border border-gray-300 rounded w-[400px]" />
+                                <p className='text-medium font-bold '>Correo Electrónico</p>
+                                <input type="email" placeholder="Correo Electrónico" {...register('email', { required: true })} className="p-1 border border-gray-300 rounded w-[400px]" />
+                                <p className='text-medium font-bold '>DNI</p>
+                                <input type="text" placeholder="DNI" {...register('dni', { required: true })} className="p-1 border border-gray-300 rounded w-[400px] mb-4" />
+                            </div>
+                        </div>
+
+                        <div className="tu-pedido w-1/2 pl-5">
+                            <h2 className='text-xl font-bold'>Tu Pedido</h2>
+                            <div>
+                                {carrito.map((prod) => (
+                                    <div key={prod.id} className="flex justify-between">
+                                        <div>
+                                            <p className='mt-3 font-bold'>Producto</p>
+                                            <h3>{prod.nameProduct}</h3>
+                                        </div>
+                                        <div>
+                                            <p className='mt-3 font-bold'>Cantidad</p>
+                                            <p>{prod.cantidad}</p>
+                                        </div>
+                                        <div>
+                                            <p className='mt-3 font-bold'>Total</p>
+                                            <p>${prod.price * prod.cantidad}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                                {carrito.length > 0 ? (
+                                    <>
+                                        <p className='mt-3 font-bold'>Total</p>
+                                        <h3 className='mb-4'>${precioTotal()}</h3>
+                                    </>
+                                ) : (
+                                    <h3>El carrito está vacío</h3>
+                                )}
+                                <button className="enviar mr-5 bg-red-500 text-white p-2 rounded" type="submit">
+                                    Confirmar Pedido
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </>
     );
 };
 
-export default Pedidos;
+export default CheckOut;

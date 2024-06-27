@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import ItemCount from "../../components/ui/ItemCount";
 import PropTypes from "prop-types";
 import { CartContext } from "../../context/cartcontext";
-import { getProductById } from "../../services/Productos"; // Importa la función para obtener el producto por ID
+import { getProductById } from "../../services/Productos";
 
 const ItemDetail = ({ id }) => {
     const { agregarAlCarrito } = useContext(CartContext);

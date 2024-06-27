@@ -53,7 +53,7 @@ const Carrito = () => {
 
                     <div className='ml-10 mt-10 bg-gray-100 rounded w-[520px] h-52 flex flex-col items-center justify-center'>
                         <h2 className='mb-10 text-xl font-bold ml-5'>Precio total: ${precioTotal()}</h2>
-                        <Link className='ml-5 mr-5 bg-red-500 text-white p-2 rounded' to="/checkout">Finalizar Compra</Link>
+                        <Link className='ml-5 mr-5 bg-red-500 text-white p-2 rounded' to="/pedidos/checkout">Finalizar Compra</Link>
                     </div>
                 </div>
             ) : (

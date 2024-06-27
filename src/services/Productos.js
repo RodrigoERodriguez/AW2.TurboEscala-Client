@@ -12,7 +12,6 @@ export const getProductos = async () => {
 
 export const getProductById = async (id) => {
     try {
-        console.log(id);
         const response = await axios.get(`http://localhost:5000/api/productos/item/${id}`);
         return response.data;
     } catch (error) {
