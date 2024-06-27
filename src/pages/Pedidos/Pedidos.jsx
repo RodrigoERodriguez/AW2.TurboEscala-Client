@@ -15,7 +15,7 @@ const Pedidos = () => {
         }
 
         setError('');
-        
+
         try {
             const pedidoEncontrado = await pedidoService.buscarPedido(codigoPedido, email, dni);
             if (pedidoEncontrado) {
@@ -78,15 +78,15 @@ const Pedidos = () => {
                         <div className="bg-gray-100 p-4 rounded-lg shadow-md">
                             <h2 className="text-2xl mb-4">Detalles del Pedido:</h2>
                             <p className="mb-2"><strong>Estado:</strong> {item.estado}</p>
-                            <p className="mb-2"><strong>Fecha:</strong> {item.fecha.toDate().toLocaleDateString()}</p>
-                            <p className="mb-2"><strong>Cantidad de productos:</strong> {Object.keys(item.productos).length}</p>
+                            <p className="mb-2"><strong>Fecha:</strong> {new Date(item.fecha.seconds * 1000).toLocaleDateString()}</p>
+                            <p className="mb-2"><strong>Cantidad de productos:</strong> {item.productos.length}</p>
                             <p className="mb-4"><strong>Monto total:</strong> {item.total}</p>
-                        
+
                             <h3 className="text-xl mb-2">Productos:</h3>
                             <ul className="list-disc pl-5">
-                                {Object.entries(item.productos).map(([key, producto]) => (
-                                    <li key={key}>
-                                        {producto.nameProduct} - Cantidad: {producto.cantidad} - Precio: {producto.price}
+                                {item.productos.map((producto, index) => (
+                                    <li key={index}>
+                                        {producto.nombreProducto} - Cantidad: {producto.cantidad} - Precio: {producto.precio}
                                     </li>
                                 ))}
                             </ul>

@@ -60,7 +60,7 @@ function App() {
           <Route path="/productos/:categoria" element={<ItemListContainer />} />
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/pedidos/checkout" element={<CheckOut />} />
-          <Route path="/mispedidos" element={<Pedidos />} />
+          <Route path="/pedidos/mispedidos" element={<Pedidos />} />
         </Routes>
 
         {showNavBarAndFooter && <Footer />}

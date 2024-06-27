@@ -1,19 +1,18 @@
 import axios from 'axios';
 
-const baseURL = 'http://localhost:5000/api/pedidos/checkout';
-
 const pedidoService = {
     async buscarPedido(codigoPedido, email, dni) {
         try {
-            const response = await axios.get(`${baseURL}/buscar`, {
+            const response = await axios.get('http://localhost:5000/api/pedidos/mispedidos', {
                 params: {
-                    codigoPedido,
+                    id: codigoPedido,
                     email,
                     dni,
                 },
             });
             return response.data;
         } catch (error) {
+            console.error(`Error al buscar el pedido: ${error.message}`);
             throw new Error(`Error al buscar el pedido: ${error.message}`);
         }
     },
