@@ -44,10 +44,15 @@ export const getProductosForEmployeeView = async () => {
 
 export const updateProducto = async (id, productoData) => {
     try {
-        const response = await axios.put(`http://localhost:5000/api/productos/${id}`, productoData);
+        const response = await axios.put(`http://localhost:5000/employeeview/${id}`, {
+            nameProduct: productoData.nameProduct,
+            price: productoData.price,
+            stock: productoData.stock,
+            description: productoData.description
+        });
         return response.data;
     } catch (error) {
-        console.error(`Error updating producto with ID ${id}:`, error);
+        console.error(`Error updating producto with ID ${id} for employee view:`, error);
         throw error;
     }
 };
