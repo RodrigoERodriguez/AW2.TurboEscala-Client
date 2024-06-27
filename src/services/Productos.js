@@ -30,12 +30,34 @@ export const getProductosByCategoria = async (categoria) => {
     }
 };
 
+//=========================================================================================================
+
+export const getProductosForEmployeeView = async () => {
+    try {
+        const response = await axios.get('http://localhost:5000/employeeview');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching productos for employeeview:', error);
+        throw error;
+    }
+};
+
 export const updateProducto = async (id, productoData) => {
     try {
         const response = await axios.put(`http://localhost:5000/api/productos/${id}`, productoData);
         return response.data;
     } catch (error) {
         console.error(`Error updating producto with ID ${id}:`, error);
+        throw error;
+    }
+};
+
+export const getProductosByCategoriaForEmployeeView = async (categoria) => {
+    try {
+        const response = await axios.get(`http://localhost:5173/api/productos/categoria/${categoria}/employeeview`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching productos of category ${categoria} for employeeview:`, error);
         throw error;
     }
 };

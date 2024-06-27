@@ -43,7 +43,7 @@ function App() {
             onEnter={() => handleNavigationExceptions()}
           />
           <Route
-            path="/employeeView"
+            path="/employeeview"
             element={<EmployeeView setShowNavBarAndFooter={setShowNavBarAndFooter} />}
             onEnter={() => handleNavigationExceptions()}
           />

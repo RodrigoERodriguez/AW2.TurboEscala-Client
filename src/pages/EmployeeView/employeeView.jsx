@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { updateProducto } from '../../services/Productos';
+import { updateProducto, getProductosByCategoriaForEmployeeView, getProductosForEmployeeView } from '../../services/Productos';
 import Item from '../../components/shared/Item/Item';
 
 const EmployeeView = () => {
@@ -10,7 +10,12 @@ const EmployeeView = () => {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const productosList = await fetchProductos(categoria);
+                let productosList = [];
+                if (categoria === '') {
+                    productosList = await getProductosForEmployeeView();
+                } else {
+                    productosList = await getProductosByCategoriaForEmployeeView(categoria);
+                }
                 setItems(productosList);
                 setLoading(false);
             } catch (error) {
@@ -24,7 +29,7 @@ const EmployeeView = () => {
     const handleInputChange = async (id, field, value) => {
         try {
             await updateProducto(id, { [field]: value });
-            setItems(items.map(item => 
+            setItems(items.map(item =>
                 item.id === id ? { ...item, [field]: value } : item
             ));
         } catch (error) {
@@ -51,11 +56,11 @@ const EmployeeView = () => {
             <div className="ml-10 grid grid-cols-3 gap-4 mt-5">
                 {items.length > 0 ? (
                     items.map(prod => (
-                        <Item 
-                            key={prod.id} 
-                            producto={prod} 
-                            editable={true} 
-                            onInputChange={handleInputChange} 
+                        <Item
+                            key={prod.id}
+                            producto={prod}
+                            editable={true}
+                            onInputChange={handleInputChange}
                         />
                     ))
                 ) : (
