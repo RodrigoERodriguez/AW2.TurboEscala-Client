@@ -6,7 +6,7 @@ import { getProductos } from "../../../services/Productos";
 const ItemDetailContainer = () => {
     const [item, setItem] = useState(null);
     const [error, setError] = useState(null);
-    const { id } = useParams();
+    const { id } = useParams(); // Obtener el id desde React Router
 
     useEffect(() => {
         const fetchProducto = async () => {
@@ -23,7 +23,9 @@ const ItemDetailContainer = () => {
             }
         };
 
-        fetchProducto();
+        if (id) {
+            fetchProducto();
+        }
     }, [id]);
 
     return (
@@ -33,7 +35,7 @@ const ItemDetailContainer = () => {
                     <p className="font-bold text-center mt-20 text-xl">{error}<Link className="text-red-500" to="/productos">Catálogo</Link></p>
                 </div>
             ) : (
-                item && <ItemDetail item={item} />
+                item && <ItemDetail id={id} item={item} />
             )}
         </div>
     );

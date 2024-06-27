@@ -5,13 +5,14 @@ export const getProductos = async () => {
         const response = await axios.get('http://localhost:5000/api/productos/');
         return response.data;
     } catch (error) {
-        console.error('Error fetching productos:', error);
+        console.error('Error fetching productos');
         throw error;
     }
 };
 
 export const getProductById = async (id) => {
     try {
+        console.log(id);
         const response = await axios.get(`http://localhost:5000/api/productos/item/${id}`);
         return response.data;
     } catch (error) {
@@ -25,7 +26,7 @@ export const getProductosByCategoria = async (categoria) => {
         const response = await axios.get(`http://localhost:5000/api/productos/categoria/${categoria}`);
         return response.data;
     } catch (error) {
-        console.error(`Error al obtener productos de la categoría ${categoria}:`, error);
+        console.error(`Error al obtener productos de la categoría ${categoria}`);
         throw error;
     }
 };

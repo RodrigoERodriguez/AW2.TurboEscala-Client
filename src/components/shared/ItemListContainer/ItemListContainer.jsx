@@ -5,7 +5,6 @@ import { getProductosByCategoria, getProductos } from "../../../services/Product
 
 const ItemListContainer = () => {
     const [productos, setProductos] = useState([]);
-    const [titulo, setTitulo] = useState("Productos");
     const { categoria } = useParams();
 
     useEffect(() => {
@@ -14,7 +13,6 @@ const ItemListContainer = () => {
                 let productosData;
                 if (categoria) {
                     productosData = await getProductosByCategoria(categoria);
-                    setTitulo(`Productos - ${categoria}`);
                 } else {
                     productosData = await getProductos();
                 }
@@ -29,7 +27,7 @@ const ItemListContainer = () => {
 
     return (
         <div>
-            <ItemList productos={productos} titulo={titulo} />
+            <ItemList productos={productos}/>
         </div>
     );
 };

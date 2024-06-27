@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { updateProducto } from '../../../services/Productos';
 import { Link } from 'react-router-dom';
 
-
 const Item = ({ producto, editable, onInputChange }) => {
     const [editing, setEditing] = useState(false);
     const [editedName, setEditedName] = useState(producto.nameProduct);
@@ -12,16 +11,28 @@ const Item = ({ producto, editable, onInputChange }) => {
 
     const handleEditToggle = () => {
         setEditing(!editing);
+        // Reiniciar los valores editados cuando se cancela la edición
+        if (!editing) {
+            setEditedName(producto.nameProduct);
+            setEditedPrice(String(producto.price));
+            setEditedStock(String(producto.stock));
+        }
     };
 
     const handleInputChangeInternal = (event) => {
         const { name, value } = event.target;
-        if (name === 'editedName') {
-            setEditedName(value.replace(/[^a-zA-Z0-9 ]/g, ''));
-        } else if (name === 'editedPrice') {
-            setEditedPrice(value.replace(/[^0-9]/g, ''));
-        } else if (name === 'editedStock') {
-            setEditedStock(value.replace(/[^0-9]/g, ''));
+        switch (name) {
+            case 'editedName':
+                setEditedName(value.replace(/[^a-zA-Z0-9 ]/g, ''));
+                break;
+            case 'editedPrice':
+                setEditedPrice(value.replace(/[^0-9]/g, ''));
+                break;
+            case 'editedStock':
+                setEditedStock(value.replace(/[^0-9]/g, ''));
+                break;
+            default:
+                break;
         }
     };
 
@@ -97,7 +108,7 @@ const Item = ({ producto, editable, onInputChange }) => {
                         {editable ? (
                             <button className='mr-4 bg-black text-white font-bold px-4 py-2 rounded-full hover:bg-gray-600' onClick={handleEditToggle}>Editar</button>
                         ) : (
-                            <Link className='ml-2' to={`/item/${producto.id}`}>Ver Más</Link>
+                            <Link className='ml-2' to={`/productos/item/${producto.id}`}>Ver Más</Link>
                         )}
                     </div>
                 )}
